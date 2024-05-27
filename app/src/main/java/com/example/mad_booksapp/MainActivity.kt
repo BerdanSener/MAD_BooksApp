@@ -1,46 +1,48 @@
 package com.example.mad_booksapp
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.mad_booksapp.ui.theme.MAD_BooksAppTheme
+import com.example.mad_booksapp.navigation.Navigation
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MAD_BooksAppTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    Greeting("Android")
-                }
-            }
+            //MovieAppMAD24Theme {
+            Navigation()
+            //}
         }
     }
-}
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+    override fun onStart() {
+        super.onStart()
+        Log.i("MainActivity", "onStart called.")
+    }
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    MAD_BooksAppTheme {
-        Greeting("Android")
+    override fun onResume() {
+        super.onResume()
+        Log.i("MainActivity", "onResume called.")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.i("MainActivity", "onPause called.")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.i("MainActivity", "onStop called.")
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        Log.i("MainActivity", "onRestart called.")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.i("MainActivity", "onDestroy called.")
     }
 }
