@@ -1,10 +1,8 @@
 package com.example.mad_booksapp.viewModel
 
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.ViewModel
 import com.example.mad_booksapp.models.Book
-import com.example.mad_booksapp.models.getBooks
 
 class BooksViewModel: ViewModel() {
     private val _books = mutableStateListOf<Book>()
@@ -26,10 +24,11 @@ class BooksViewModel: ViewModel() {
         _books.removeIf { it.isbn == isbn }
     }
 
-    fun editBook(isbn: String, newAuthor: String, newTitle: String) {
+    fun editBook(isbn: String, newAuthor: String, newTitle: String, newYear: Int) {
         _books.find { it.isbn == isbn }?.let { book ->
             book.author = newAuthor
             book.title = newTitle
+            book.year = newYear
         }
     }
 

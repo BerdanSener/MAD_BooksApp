@@ -1,5 +1,7 @@
 package com.example.mad_booksapp.screens
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -12,8 +14,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import com.example.mad_booksapp.viewModel.BooksViewModel
+import com.example.mad_booksapp.widgets.EditBookScreen
 import com.example.mad_booksapp.widgets.SimpleTopAppBar
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun EditScreen(
     bookISBN: String?,
@@ -27,7 +31,7 @@ fun EditScreen(
 
         Scaffold (
             topBar = {
-                SimpleTopAppBar(title = book.title) {
+                SimpleTopAppBar("Edit Book") {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
@@ -40,7 +44,16 @@ fun EditScreen(
             Column {
                 Text(
                     modifier = Modifier.padding(innerPadding),
-                    text = book.author
+                    text = book.title
+                )
+                EditBookScreen(
+                    modifier = Modifier.padding(innerPadding),
+                    viewModel = viewModel,
+                    title = book.title,
+                    author = book.author,
+                    year = book.year,
+                    isbn = book.isbn,
+                    onFinish = { navController.popBackStack() }
                 )
             }
         }

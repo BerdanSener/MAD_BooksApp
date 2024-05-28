@@ -2,7 +2,10 @@ package com.example.mad_booksapp.widgets
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
@@ -15,6 +18,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
@@ -150,6 +154,132 @@ fun AddBookDialog(onDismiss: () -> Unit, onSave: (String, String, String, Int) -
         }
     )
 }
+
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+fun EditBookScreen(
+    modifier: Modifier,
+    viewModel: BooksViewModel,
+    title: String,
+    author: String,
+    year: Int,
+    isbn: String,
+    onFinish: () -> Unit = {}
+) {
+    var editedTitle by remember { mutableStateOf(title) }
+    var editedAuthor by remember { mutableStateOf(author) }
+    var editedYear by remember { mutableStateOf(year.toString()) }
+    var editedIsbn by remember { mutableStateOf(isbn) }
+
+    var titleError by remember { mutableStateOf<String?>(null) }
+    var authorError by remember { mutableStateOf<String?>(null) }
+    var isbnError by remember { mutableStateOf<String?>(null) }
+    var yearError by remember { mutableStateOf<String?>(null) }
+
+    val currentYear = LocalDateTime.now().year
+
+    val isSaveEnabled = editedTitle.isNotBlank() &&
+            editedAuthor.isNotBlank() &&
+            isValidISBN13(editedIsbn) &&
+            editedYear.toIntOrNull() != null &&
+            editedYear.toInt() <= currentYear &&
+            editedYear.toInt() > 0 &&
+            yearError == null
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(text = "Edit Book")
+
+        OutlinedTextField(
+            value = editedIsbn,
+            onValueChange = {
+                editedIsbn = it
+                isbnError = if (!isValidISBN13(editedIsbn)) "Invalid ISBN" else null
+            },
+            label = { Text("ISBN") },
+            modifier = Modifier.fillMaxWidth().padding(8.dp),
+            isError = isbnError != null,
+            enabled = false
+        )
+        if (isbnError != null) {
+            Text(isbnError!!, color = Color.Red, modifier = Modifier.padding(start = 16.dp, top = 0.dp, end = 16.dp, bottom = 8.dp))
+        }
+
+        OutlinedTextField(
+            value = editedTitle,
+            onValueChange = {
+                editedTitle = it
+                titleError = if (editedTitle.isBlank()) "Title cannot be empty" else null
+            },
+            label = { Text("Title") },
+            modifier = Modifier.fillMaxWidth().padding(8.dp),
+            isError = titleError != null
+        )
+        if (titleError != null) {
+            Text(titleError!!, color = Color.Red, modifier = Modifier.padding(start = 16.dp, top = 0.dp, end = 16.dp, bottom = 8.dp))
+        }
+
+        OutlinedTextField(
+            value = editedAuthor,
+            onValueChange = {
+                editedAuthor = it
+                authorError = if (editedAuthor.isBlank()) "Author cannot be empty" else null
+            },
+            label = { Text("Author") },
+            modifier = Modifier.fillMaxWidth().padding(8.dp),
+            isError = authorError != null
+        )
+        if (authorError != null) {
+            Text(authorError!!, color = Color.Red, modifier = Modifier.padding(start = 16.dp, top = 0.dp, end = 16.dp, bottom = 8.dp))
+        }
+
+        OutlinedTextField(
+            value = editedYear,
+            onValueChange = {
+                editedYear = it
+                yearError = when {
+                    editedYear.toIntOrNull() == null -> "Year must be a number"
+                    editedYear.toInt() > currentYear -> "Year cannot be in the future"
+                    editedYear.toInt() <= 0 -> "Year must be greater than 0"
+                    else -> null
+                }
+            },
+            label = { Text("Year") },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier.fillMaxWidth().padding(8.dp),
+            isError = yearError != null
+        )
+        if (yearError != null) {
+            Text(yearError!!, color = Color.Red, modifier = Modifier.padding(start = 16.dp, top = 0.dp, end = 16.dp, bottom = 8.dp))
+        }
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Button(onClick = { onFinish() }) {
+                Text("Cancel")
+            }
+            Button(
+                onClick = {
+                    viewModel.editBook(isbn = isbn, newAuthor = editedAuthor, newTitle = editedTitle, newYear = editedYear.toInt())
+                    onFinish()
+                          },
+                enabled = isSaveEnabled
+            ) {
+                Text("Done")
+            }
+        }
+    }
+}
+
+
 
 /*
     ISBN-Checker generated with Chat-GPT
