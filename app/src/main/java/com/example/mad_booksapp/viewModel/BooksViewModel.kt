@@ -36,4 +36,8 @@ class BooksViewModel: ViewModel() {
         val newBook = Book(isbn = isbn, author = author, title =  title, year =  year)
         _books.add(newBook)
     }
+
+    val bookExists: (String) -> Boolean = { isbn ->
+        _books.any { it.isbn == isbn }
+    }
 }

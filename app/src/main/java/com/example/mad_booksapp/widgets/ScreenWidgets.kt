@@ -39,16 +39,20 @@ fun AddBookButton(modifier: Modifier, viewModel: BooksViewModel) {
     }
 
     if (showDialog) {
-        AddBookDialog(onDismiss = { showDialog = false }, onSave = { title, author, isbn, year ->
-            viewModel.addBook(isbn = isbn, author = author, title = title, year = year)
-            showDialog = false
-        })
+        AddBookDialog(
+            onDismiss = { showDialog = false },
+            onSave = { title, author, isbn, year ->
+                viewModel.addBook(isbn = isbn, author = author, title = title, year = year)
+                showDialog = false
+            },
+            viewModel = viewModel
+        )
     }
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun AddBookDialog(onDismiss: () -> Unit, onSave: (String, String, String, Int) -> Unit) {
+fun AddBookDialog(onDismiss: () -> Unit, onSave: (String, String, String, Int) -> Unit, viewModel: BooksViewModel) {
     var title by remember { mutableStateOf("") }
     var author by remember { mutableStateOf("") }
     var isbn by remember { mutableStateOf("") }
@@ -105,7 +109,11 @@ fun AddBookDialog(onDismiss: () -> Unit, onSave: (String, String, String, Int) -
                     value = isbn,
                     onValueChange = {
                         isbn = it
-                        isbnError = if (!isValidISBN13(isbn)) "Invalid ISBN" else null
+                        isbnError = when {
+                            !isValidISBN13(isbn) -> "Invalid ISBN"
+                            viewModel.bookExists(isbn) -> "Book with this ISBN already exists"
+                            else -> null
+                        }
                     },
                     label = { Text("ISBN") },
                     modifier = Modifier.fillMaxWidth().padding(8.dp),
