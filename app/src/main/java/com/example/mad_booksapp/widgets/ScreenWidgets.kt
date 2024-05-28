@@ -1,5 +1,7 @@
 package com.example.mad_booksapp.widgets
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -18,7 +20,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.example.mad_booksapp.viewModel.BooksViewModel
+import java.time.LocalDateTime
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AddBookButton(modifier: Modifier, viewModel: BooksViewModel) {
     var showDialog by remember { mutableStateOf(false) }
@@ -32,12 +36,13 @@ fun AddBookButton(modifier: Modifier, viewModel: BooksViewModel) {
 
     if (showDialog) {
         AddBookDialog(onDismiss = { showDialog = false }, onSave = { title, author, isbn, year ->
-            viewModel.addBook(isbn, author, title, year)
+            viewModel.addBook(isbn = isbn, author = author, title = title, year = year)
             showDialog = false
         })
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AddBookDialog(onDismiss: () -> Unit, onSave: (String, String, String, Int) -> Unit) {
     var title by remember { mutableStateOf("") }
@@ -50,7 +55,14 @@ fun AddBookDialog(onDismiss: () -> Unit, onSave: (String, String, String, Int) -
     var isbnError by remember { mutableStateOf<String?>(null) }
     var yearError by remember { mutableStateOf<String?>(null) }
 
-    val isSaveEnabled = title.isNotBlank() && author.isNotBlank() && isbn.isNotBlank() && year.toIntOrNull() != null
+    val currentYear = LocalDateTime.now().year
+
+    val isSaveEnabled = title.isNotBlank() &&
+            author.isNotBlank() &&
+            isValidISBN13(isbn) &&
+            year.toIntOrNull() != null &&
+            year.toInt() <= currentYear &&
+            year.toInt() > 0
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -103,7 +115,12 @@ fun AddBookDialog(onDismiss: () -> Unit, onSave: (String, String, String, Int) -
                     value = year,
                     onValueChange = {
                         year = it
-                        yearError = if (year.toIntOrNull() == null) "Year must be a number" else null
+                        yearError = when {
+                            year.toIntOrNull() == null -> "Year must be a number"
+                            year.toInt() > currentYear -> "Year cannot be in the future"
+                            year.toInt() <= 0 -> "Year must be greater than 0"
+                            else -> null
+                        }
                     },
                     label = { Text("Year") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),

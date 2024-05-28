@@ -73,7 +73,16 @@ fun BookList(
                     viewModel.toggleFavoriteBook(bookISBN)
                 }
             )*/
-            BookItem(book = book, modifier = modifier)
+            BookItem(
+                book = book,
+                modifier = modifier,
+                onDelete = {
+                    viewModel.deleteBook(book.isbn)
+                },
+                onBookRead = {
+                    viewModel.toggleBookRead(book.isbn)
+                }
+            )
         }
     }
 }
@@ -130,7 +139,6 @@ fun BookDetails(modifier: Modifier, book: Book) {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(text = book.title)
         Icon(modifier = Modifier
             .clickable {
                 showDetails = !showDetails
@@ -164,8 +172,8 @@ fun BookItem(
     onItemClick: (String) -> Unit = {},
     onFavoriteClick: (String) -> Unit = {},
     onEdit: (String) -> Unit = {},
-    onDelete: (String) -> Unit = {},
-    onBookRead: (String) -> Unit = {}
+    onDelete: () -> Unit = {},
+    onBookRead: () -> Unit = {}
 ) {
     Row(
         modifier = Modifier
@@ -185,9 +193,13 @@ fun BookItem(
         Spacer(modifier = Modifier.width(16.dp))
         DeleteBookItem(modifier = modifier, onClick = onDelete)
         Spacer(modifier = Modifier.width(16.dp))
-        BookReadItem(modifier = modifier, onClick = onBookRead)
+        BookReadItem(modifier = modifier, onClick = onBookRead, bookRead = book.bookRead)
         Spacer(modifier = Modifier.width(16.dp))
-
+    }
+    Box(
+        contentAlignment = Alignment.Center
+    ){
+        BookDetails(modifier = modifier.padding(12.dp), book = book)
     }
 }
 
@@ -210,13 +222,13 @@ fun EditBookItem(
 @Composable
 fun DeleteBookItem(
     modifier: Modifier,
-    onClick: (String) -> Unit
+    onClick: () -> Unit
 ){
     Icon(
         contentDescription = "DeleteIcon",
         modifier = Modifier
             .clickable {
-                println("Delete")
+                onClick()
             },
         imageVector = Icons.Filled.Delete
     )
@@ -225,15 +237,22 @@ fun DeleteBookItem(
 @Composable
 fun BookReadItem(
     modifier: Modifier,
-    onClick: (String) -> Unit
+    onClick: () -> Unit,
+    bookRead: Boolean
 ){
     Icon(
         contentDescription = "CheckIcon",
         modifier = Modifier
             .clickable {
-                println("Check")
+                onClick()
             },
-        imageVector = Icons.Filled.Check
+        tint = if (bookRead) Color.Green else Color.Black,
+        imageVector =
+        if (bookRead) {
+            Icons.Filled.Check
+        } else {
+            Icons.Default.CheckCircle
+        }
     )
 }
 

@@ -34,7 +34,7 @@ class BooksViewModel: ViewModel() {
     }
 
     fun addBook(isbn: String, author: String, title: String, year: Int) {
-        val newBook = Book(isbn, author, title, year)
+        val newBook = Book(isbn = isbn, author = author, title =  title, year =  year)
         _books.add(newBook)
     }
 }
