@@ -7,27 +7,27 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import com.example.mad_booksapp.viewModel.BooksViewModel
-import com.example.mad_booksapp.widgets.BookRow
 import com.example.mad_booksapp.widgets.SimpleTopAppBar
-import androidx.compose.ui.Modifier
 
 @Composable
 fun EditScreen(
     bookISBN: String?,
     navController: NavController,
-    booksViewModel: BooksViewModel
+    viewModel: BooksViewModel
 ) {
 
     bookISBN?.let {
-        val book = booksViewModel.books.filter { book -> book.isbn == bookISBN }[0]
+        val book = viewModel.books.filter { book -> book.isbn == bookISBN }[0]
 
 
         Scaffold (
             topBar = {
-                SimpleTopAppBar(title = "movie.title") {
+                SimpleTopAppBar(title = book.title) {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
@@ -38,10 +38,9 @@ fun EditScreen(
             }
         ){ innerPadding ->
             Column {
-                BookRow(
+                Text(
                     modifier = Modifier.padding(innerPadding),
-                    book = book,
-                    onFavoriteClick = { isbn -> booksViewModel.toggleFavoriteBook(isbn = isbn) }
+                    text = book.author
                 )
             }
         }

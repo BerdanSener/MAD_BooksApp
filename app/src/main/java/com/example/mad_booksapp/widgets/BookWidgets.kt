@@ -9,29 +9,23 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ShapeDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -41,18 +35,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.mad_booksapp.R
 import com.example.mad_booksapp.models.Book
-import com.example.mad_booksapp.models.getBooks
 import com.example.mad_booksapp.navigation.Screen
 import com.example.mad_booksapp.viewModel.BooksViewModel
 
@@ -66,14 +51,6 @@ fun BookList(
 ){
     LazyColumn(modifier = modifier) {
         items(books) { book ->
-            /*BookRow(book = book,
-                onItemClick = { bookISBN ->
-                    navController.navigate(route = Screen.DetailScreen.withId(bookISBN))
-                },
-                onFavoriteClick = {bookISBN ->
-                    viewModel.toggleFavoriteBook(bookISBN)
-                }
-            )*/
             BookItem(
                 book = book,
                 modifier = modifier,
@@ -85,47 +62,12 @@ fun BookList(
                 },
                 onFavoriteClick = {
                     viewModel.toggleFavoriteBook(book.isbn)
+                },
+                onEdit = {
+                    bookISBN -> navController.navigate(route = Screen.EditScreen.withId(bookISBN))
                 }
             )
         }
-    }
-}
-
-@Composable
-fun BookRow(
-    modifier: Modifier = Modifier,
-    book: Book,
-    onItemClick: (String) -> Unit = {},
-    onFavoriteClick: (String) -> Unit = {}
-){
-    Card(modifier = modifier
-        .fillMaxWidth()
-        .padding(5.dp)
-        .clickable {
-            onItemClick(book.isbn)
-        },
-        shape = ShapeDefaults.Large,
-        elevation = CardDefaults.cardElevation(10.dp)
-    ) {
-        Column {
-
-            //BookCardHeader(isFavorite = book.isFavorite, onFavoriteClick = { onFavoriteClick(book.isbn) })
-            BookItem(book = book)
-            BookDetails(modifier = modifier.padding(12.dp), book = book)
-
-        }
-    }
-}
-
-@Composable
-fun BookCardHeader(
-    isFavorite: Boolean = false,
-    onFavoriteClick: () -> Unit = {}
-) {
-    Box(
-        contentAlignment = Alignment.Center
-    ) {
-        FavoriteIcon(isFavorite = isFavorite, onFavoriteClick)
     }
 }
 
@@ -173,7 +115,6 @@ fun BookDetails(modifier: Modifier, book: Book) {
 fun BookItem(
     modifier: Modifier = Modifier,
     book: Book,
-    onItemClick: (String) -> Unit = {},
     onFavoriteClick: () -> Unit = {},
     onEdit: (String) -> Unit = {},
     onDelete: () -> Unit = {},
@@ -193,11 +134,11 @@ fun BookItem(
                 //.clickable { onItemClick(book.isbn) }
         )*/
         Spacer(modifier = Modifier.width(16.dp))
-        EditBookItem(modifier = modifier, onClick = onEdit)
+        EditBookItem(onClick = onEdit, isbn = book.isbn)
         Spacer(modifier = Modifier.width(16.dp))
-        DeleteBookItem(modifier = modifier, onClick = onDelete)
+        DeleteBookItem(onClick = onDelete)
         Spacer(modifier = Modifier.width(16.dp))
-        BookReadItem(modifier = modifier, onClick = onBookRead, bookRead = book.bookRead)
+        BookReadItem(onClick = onBookRead, bookRead = book.bookRead)
         Spacer(modifier = Modifier.width(16.dp))
         FavoriteIcon(onFavoriteClick = onFavoriteClick, isFavorite = book.isFavorite)
     }
@@ -211,14 +152,14 @@ fun BookItem(
 
 @Composable
 fun EditBookItem(
-    modifier: Modifier,
-    onClick: (String) -> Unit = {}
+    onClick: (String) -> Unit = {},
+    isbn: String
 ){
     Icon(
         contentDescription = "EditIcon",
         modifier = Modifier
         .clickable {
-            println("Edit")
+            onClick(isbn)
         },
         imageVector = Icons.Filled.Edit
     )
@@ -226,7 +167,6 @@ fun EditBookItem(
 
 @Composable
 fun DeleteBookItem(
-    modifier: Modifier,
     onClick: () -> Unit
 ){
     Icon(
@@ -241,7 +181,6 @@ fun DeleteBookItem(
 
 @Composable
 fun BookReadItem(
-    modifier: Modifier,
     onClick: () -> Unit,
     bookRead: Boolean
 ){

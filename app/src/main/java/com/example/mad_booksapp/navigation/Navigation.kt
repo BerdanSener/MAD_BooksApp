@@ -29,15 +29,15 @@ fun Navigation() {
         }
 
         composable(
-            route = Screen.DetailScreen.route,
+            route = Screen.EditScreen.route,
             arguments = listOf(navArgument(name = DETAIL_ARGUMENT_KEY) {type = NavType.StringType})
-        ) {/* backStackEntry ->
-            DetailScreen(
-                //navController = navController,
-                //movieId = backStackEntry.arguments?.getString(DETAIL_ARGUMENT_KEY),
-                //moviesViewModel = moviesViewModel
+        ) { backStackEntry ->
+            EditScreen(
+                navController = navController,
+                bookISBN = backStackEntry.arguments?.getString(DETAIL_ARGUMENT_KEY),
+                viewModel = viewModel
             )
-        */}
+        }
 
         composable(route = Screen.FavoriteBooks.route){
             FavoriteBooksScreen(viewModel = viewModel, navController = navController) //, moviesViewModel = moviesViewModel
