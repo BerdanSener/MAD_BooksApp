@@ -1,25 +1,31 @@
 package com.example.mad_booksapp.screens
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
+import com.example.mad_booksapp.viewModel.BooksViewModel
+import com.example.mad_booksapp.widgets.BookRow
 import com.example.mad_booksapp.widgets.SimpleTopAppBar
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 
 @Composable
 fun DetailScreen(
-    bookId: String?,
+    bookISBN: String?,
     navController: NavController,
-    //moviesViewModel: MoviesViewModel
+    booksViewModel: BooksViewModel
 ) {
 
-    bookId?.let {
-        //val movie = moviesViewModel.movies.filter { movie -> movie.id == movieId }[0]
+    bookISBN?.let {
+        val book = booksViewModel.books.filter { book -> book.isbn == bookISBN }[0]
 
 
         Scaffold (
@@ -35,23 +41,11 @@ fun DetailScreen(
             }
         ){ innerPadding ->
             Column {
-                Text("inner Padding" + innerPadding)
-                /**MovieRow(
-                    modifier = androidx.compose.ui.Modifier.padding(innerPadding),
-                    movie = movie,
-                    onFavoriteClick = { id -> moviesViewModel.toggleFavoriteMovie(id) }
+                BookRow(
+                    modifier = Modifier.padding(innerPadding),
+                    book = book,
+                    onFavoriteClick = { isbn -> booksViewModel.toggleFavoriteBook(isbn = isbn) }
                 )
-
-                Divider(modifier = Modifier.padding(4.dp))
-
-                Column {
-                    Text("Movie Trailer")
-                    VideoPlayer(trailerURL = movie.trailer)
-                }
-
-                Divider(modifier = Modifier.padding(4.dp))
-
-                HorizontalScrollableImageView(movie = movie)*/
             }
         }
     }

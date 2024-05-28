@@ -5,13 +5,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 
 data class Book(
-    val isbn: String,
-    val title: String,
-    val author: String,
-    val year: Int,
-    val initialIsFavorite: Boolean = false
+    var isbn: String,
+    var title: String,
+    var author: String,
+    var year: Int,
+    var initialIsFavorite: Boolean = false,
+    var initialIsNotRead: Boolean = false
 ) {
     var isFavorite by mutableStateOf(initialIsFavorite)
+    var bookRead by mutableStateOf(initialIsNotRead)
 }
 
 fun getBooks(): List<Book> {

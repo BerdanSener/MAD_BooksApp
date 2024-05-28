@@ -16,4 +16,24 @@ class BooksViewModel: ViewModel() {
     fun toggleFavoriteBook(isbn: String) = _books.find { it.isbn == isbn }?.let { book ->
         book.isFavorite = !book.isFavorite
     }
+
+    fun toggleBookRead(isbn: String) = _books.find { it.isbn == isbn }?.let { book ->
+        book.bookRead = !book.bookRead
+    }
+
+    fun deleteBook(isbn: String) {
+        _books.removeIf { it.isbn == isbn }
+    }
+
+    fun editBook(isbn: String, newAuthor: String, newTitle: String) {
+        _books.find { it.isbn == isbn }?.let { book ->
+            book.author = newAuthor
+            book.title = newTitle
+        }
+    }
+
+    fun addBook(isbn: String, author: String, title: String, year: Int) {
+        val newBook = Book(isbn, author, title, year)
+        _books.add(newBook)
+    }
 }
