@@ -60,12 +60,11 @@ import com.example.mad_booksapp.viewModel.BooksViewModel
 @Composable
 fun BookList(
     modifier: Modifier,
-    books: List<Book> = getBooks(),
     navController: NavController,
     viewModel: BooksViewModel
 ){
     LazyColumn(modifier = modifier) {
-        items(books) { book ->
+        items(viewModel.books) { book ->
             /*BookRow(book = book,
                 onItemClick = { bookISBN ->
                     navController.navigate(route = Screen.DetailScreen.withId(bookISBN))

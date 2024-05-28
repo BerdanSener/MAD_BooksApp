@@ -16,6 +16,8 @@ data class Book(
     var bookRead by mutableStateOf(initialIsNotRead)
 }
 
+
+//Test-Daten
 fun getBooks(): List<Book> {
     return listOf(
         Book(isbn = "isbn1",

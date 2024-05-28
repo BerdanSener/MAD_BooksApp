@@ -35,7 +35,7 @@ fun HomeScreen(
         }
     ) { innerPadding ->
         Column {
-            AddBookButton(modifier = Modifier.padding(innerPadding))
+            AddBookButton(modifier = Modifier.padding(innerPadding), viewModel = viewModel)
             BookList(
                 modifier = Modifier.padding(innerPadding),
                 navController = navController,
