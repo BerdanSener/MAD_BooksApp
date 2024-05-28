@@ -89,7 +89,7 @@ fun AddBookDialog(onDismiss: () -> Unit, onSave: (String, String, String, Int) -
                     value = isbn,
                     onValueChange = {
                         isbn = it
-                        isbnError = if (isbn.isBlank()) "ISBN cannot be empty" else null
+                        isbnError = if (!isValidISBN13(isbn)) "Invalid ISBN" else null
                     },
                     label = { Text("ISBN") },
                     modifier = Modifier.fillMaxWidth().padding(8.dp),
@@ -135,53 +135,27 @@ fun AddBookDialog(onDismiss: () -> Unit, onSave: (String, String, String, Int) -
 }
 
 /*
-@Composable
-fun AddBookDialog(onDismiss: () -> Unit, onSave: (String, String, String, Int) -> Unit) {
-    var title by remember { mutableStateOf("") }
-    var author by remember { mutableStateOf("") }
-    var isbn by remember { mutableStateOf("") }
-    var year by remember { mutableStateOf("") }
+    ISBN-Checker generated with Chat-GPT
+ */
+fun isValidISBN13(isbn: String): Boolean {
+    // Remove any dashes from the input string
+    val cleanedIsbn = isbn.replace("-", "")
 
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text("Add Book") },
-        text = {
-            Column {
-                OutlinedTextField(
-                    value = title,
-                    onValueChange = { title = it },
-                    label = { Text("Title") }
-                )
-                OutlinedTextField(
-                    value = author,
-                    onValueChange = { author = it },
-                    label = { Text("Author") }
-                )
-                OutlinedTextField(
-                    value = isbn,
-                    onValueChange = { isbn = it },
-                    label = { Text("ISBN") }
-                )
-                OutlinedTextField(
-                    value = year,
-                    onValueChange = { year = it },
-                    label = { Text("Year") },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-                )
-            }
-        },
-        confirmButton = {
-            Button(onClick = {
-                val yearInt = year.toIntOrNull() ?: 0
-                onSave(title, author, isbn, yearInt)
-            }) {
-                Text("Save")
-            }
-        },
-        dismissButton = {
-            Button(onClick = onDismiss) {
-                Text("Cancel")
-            }
-        }
-    )
-}*/
+    // Ensure the cleaned string has exactly 13 characters
+    if (cleanedIsbn.length != 13 || !cleanedIsbn.all { it.isDigit() }) {
+        return false
+    }
+
+    // Convert the string to a list of integers
+    val digits = cleanedIsbn.map { it.toString().toInt() }
+
+    // Calculate the check digit
+    val sum = digits.take(12).mapIndexed { index, digit ->
+        if (index % 2 == 0) digit else digit * 3
+    }.sum()
+
+    val calculatedCheckDigit = (10 - (sum % 10)) % 10
+
+    // Compare the calculated check digit with the 13th digit
+    return calculatedCheckDigit == digits[12]
+}
