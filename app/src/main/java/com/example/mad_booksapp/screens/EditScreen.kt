@@ -4,21 +4,18 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import com.example.mad_booksapp.viewModel.BooksViewModel
 import com.example.mad_booksapp.widgets.BookRow
 import com.example.mad_booksapp.widgets.SimpleTopAppBar
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 
 @Composable
-fun DetailScreen(
+fun EditScreen(
     bookISBN: String?,
     navController: NavController,
     booksViewModel: BooksViewModel

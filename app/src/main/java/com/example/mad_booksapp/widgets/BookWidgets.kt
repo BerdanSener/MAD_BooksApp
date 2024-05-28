@@ -61,10 +61,11 @@ import com.example.mad_booksapp.viewModel.BooksViewModel
 fun BookList(
     modifier: Modifier,
     navController: NavController,
-    viewModel: BooksViewModel
+    viewModel: BooksViewModel,
+    books: List<Book>
 ){
     LazyColumn(modifier = modifier) {
-        items(viewModel.books) { book ->
+        items(books) { book ->
             /*BookRow(book = book,
                 onItemClick = { bookISBN ->
                     navController.navigate(route = Screen.DetailScreen.withId(bookISBN))
@@ -81,6 +82,9 @@ fun BookList(
                 },
                 onBookRead = {
                     viewModel.toggleBookRead(book.isbn)
+                },
+                onFavoriteClick = {
+                    viewModel.toggleFavoriteBook(book.isbn)
                 }
             )
         }
@@ -170,7 +174,7 @@ fun BookItem(
     modifier: Modifier = Modifier,
     book: Book,
     onItemClick: (String) -> Unit = {},
-    onFavoriteClick: (String) -> Unit = {},
+    onFavoriteClick: () -> Unit = {},
     onEdit: (String) -> Unit = {},
     onDelete: () -> Unit = {},
     onBookRead: () -> Unit = {}
@@ -195,6 +199,7 @@ fun BookItem(
         Spacer(modifier = Modifier.width(16.dp))
         BookReadItem(modifier = modifier, onClick = onBookRead, bookRead = book.bookRead)
         Spacer(modifier = Modifier.width(16.dp))
+        FavoriteIcon(onFavoriteClick = onFavoriteClick, isFavorite = book.isFavorite)
     }
     Box(
         contentAlignment = Alignment.Center
@@ -261,12 +266,6 @@ fun FavoriteIcon(
     isFavorite: Boolean,
     onFavoriteClick: () -> Unit = {}
 ) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(10.dp),
-        contentAlignment = Alignment.TopEnd
-    ){
         Icon(
             modifier = Modifier.clickable {
                 onFavoriteClick() },
@@ -280,5 +279,4 @@ fun FavoriteIcon(
 
             contentDescription = "Add to favorites"
         )
-    }
 }

@@ -1,5 +1,7 @@
 package com.example.mad_booksapp.screens
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
@@ -18,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.mad_booksapp.widgets.AddBookButton
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun HomeScreen(
     navController: NavController,
@@ -39,7 +42,8 @@ fun HomeScreen(
             BookList(
                 modifier = Modifier.padding(innerPadding),
                 navController = navController,
-                viewModel = viewModel
+                viewModel = viewModel,
+                books = viewModel.books
             )
         }
     }

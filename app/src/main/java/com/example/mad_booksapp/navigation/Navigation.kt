@@ -1,5 +1,7 @@
 package com.example.mad_booksapp.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -7,11 +9,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.mad_booksapp.screens.HomeScreen
-import com.example.mad_booksapp.screens.DetailScreen
+import com.example.mad_booksapp.screens.EditScreen
 import com.example.mad_booksapp.screens.FavoriteBooksScreen
 import com.example.mad_booksapp.viewModel.BooksViewModel
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun Navigation() {
     val navController = rememberNavController() // create a NavController instance
@@ -37,7 +40,7 @@ fun Navigation() {
         */}
 
         composable(route = Screen.FavoriteBooks.route){
-            FavoriteBooksScreen(navController = navController) //, moviesViewModel = moviesViewModel
+            FavoriteBooksScreen(viewModel = viewModel, navController = navController) //, moviesViewModel = moviesViewModel
         }
     }
 }
