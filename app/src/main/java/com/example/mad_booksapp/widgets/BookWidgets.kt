@@ -1,5 +1,6 @@
 package com.example.mad_booksapp.widgets
 
+import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -35,6 +36,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.mad_booksapp.models.Book
@@ -184,11 +186,14 @@ fun BookReadItem(
     onClick: () -> Unit,
     bookRead: Boolean
 ){
+    val context = LocalContext.current
+
     Icon(
         contentDescription = "CheckIcon",
         modifier = Modifier
             .clickable {
                 onClick()
+                if(bookRead) Toast.makeText(context, "Als nicht gelesen markiert", Toast.LENGTH_SHORT).show() else Toast.makeText(context, "Als gelesen markiert", Toast.LENGTH_SHORT).show()
             },
         tint = if (bookRead) Color.Green else Color.Black,
         imageVector =
