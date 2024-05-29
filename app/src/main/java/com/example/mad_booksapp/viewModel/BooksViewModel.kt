@@ -48,4 +48,11 @@ class BooksViewModel: ViewModel() {
     fun sortByYearDescending() {
         _books.sortByDescending { it.year }
     }
+
+    fun filterBooks(query: String): List<Book> {
+        val lowerCaseQuery = query.lowercase()
+        return favoriteBooks.filter { book ->
+            book.author.lowercase().contains(lowerCaseQuery) || book.title.lowercase().contains(lowerCaseQuery)
+        }
+    }
 }

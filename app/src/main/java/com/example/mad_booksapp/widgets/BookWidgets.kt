@@ -127,7 +127,7 @@ fun BookItem(
             .fillMaxWidth()
             .padding(8.dp)
     ) {
-        Text(text = book.title)
+        Text(text = book.title + " by " + book.author)
         Spacer(modifier = Modifier.width(16.dp))
         EditBookItem(onClick = onEdit, isbn = book.isbn)
         Spacer(modifier = Modifier.width(16.dp))
