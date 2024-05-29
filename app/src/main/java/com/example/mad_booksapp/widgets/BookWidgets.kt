@@ -128,13 +128,6 @@ fun BookItem(
             .padding(8.dp)
     ) {
         Text(text = book.title)
-        /*Icon(
-            imageVector = ImageVector.vectorResource(id = R.drawable.ic_book),
-            contentDescription = "Book Icon",
-            modifier = Modifier
-                .size(24.dp)
-                //.clickable { onItemClick(book.isbn) }
-        )*/
         Spacer(modifier = Modifier.width(16.dp))
         EditBookItem(onClick = onEdit, isbn = book.isbn)
         Spacer(modifier = Modifier.width(16.dp))

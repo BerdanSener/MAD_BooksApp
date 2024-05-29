@@ -41,5 +41,11 @@ class BooksViewModel: ViewModel() {
         _books.any { it.isbn == isbn }
     }
 
+    fun sortByYearAscending() {
+        _books.sortBy { it.year }
+    }
 
+    fun sortByYearDescending() {
+        _books.sortByDescending { it.year }
+    }
 }
